@@ -1,0 +1,518 @@
+{
+  "info": {
+    "name": "True Survey API",
+    "description": "Requests for the True Survey backend. Run them top to bottom: Create survey saves {{surveyId}} and the question/option ids used by the later requests.\n\nChange the baseUrl collection variable if the backend is not on http://localhost:8081. Swagger UI: http://localhost:8081/swagger-ui.html",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8081"
+    },
+    {
+      "key": "surveyId",
+      "value": ""
+    },
+    {
+      "key": "nameQuestionId",
+      "value": ""
+    },
+    {
+      "key": "foodQuestionId",
+      "value": ""
+    },
+    {
+      "key": "goodOptionId",
+      "value": ""
+    },
+    {
+      "key": "mealsQuestionId",
+      "value": ""
+    },
+    {
+      "key": "breakfastOptionId",
+      "value": ""
+    },
+    {
+      "key": "lunchOptionId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Surveys",
+      "item": [
+        {
+          "name": "Create survey",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/surveys",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "surveys"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Canteen Feedback\",\n  \"description\": \"Tell us what you think about the canteen\",\n  \"questions\": [\n    {\n      \"text\": \"Your name\",\n      \"type\": \"SHORT_TEXT\",\n      \"required\": false,\n      \"options\": []\n    },\n    {\n      \"text\": \"How was the food?\",\n      \"type\": \"SINGLE_CHOICE\",\n      \"required\": true,\n      \"options\": [\n        \"Good\",\n        \"Average\",\n        \"Poor\"\n      ]\n    },\n    {\n      \"text\": \"Which meals do you eat here?\",\n      \"type\": \"MULTIPLE_CHOICE\",\n      \"required\": true,\n      \"options\": [\n        \"Breakfast\",\n        \"Lunch\",\n        \"Dinner\"\n      ]\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 201', () => pm.response.to.have.status(201));",
+                  "const s = pm.response.json();",
+                  "pm.collectionVariables.set('surveyId', s.id);",
+                  "pm.collectionVariables.set('nameQuestionId', s.questions[0].id);",
+                  "pm.collectionVariables.set('foodQuestionId', s.questions[1].id);",
+                  "pm.collectionVariables.set('goodOptionId', s.questions[1].options[0].id);",
+                  "pm.collectionVariables.set('mealsQuestionId', s.questions[2].id);",
+                  "pm.collectionVariables.set('breakfastOptionId', s.questions[2].options[0].id);",
+                  "pm.collectionVariables.set('lunchOptionId', s.questions[2].options[1].id);",
+                  "pm.test('3 questions saved', () => pm.expect(s.questions.length).to.eql(3));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List surveys",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/surveys",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "surveys"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('is an array', () => pm.expect(pm.response.json()).to.be.an('array'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Search surveys",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/surveys?search=canteen",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "surveys"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "canteen"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get survey by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/surveys/{{surveyId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "surveys",
+                "{{surveyId}}"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update survey",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/surveys/{{surveyId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "surveys",
+                "{{surveyId}}"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Canteen Feedback (updated)\",\n  \"description\": \"Tell us what you think about the canteen\",\n  \"questions\": [\n    {\n      \"text\": \"Your name\",\n      \"type\": \"SHORT_TEXT\",\n      \"required\": false,\n      \"options\": []\n    },\n    {\n      \"text\": \"How was the food?\",\n      \"type\": \"SINGLE_CHOICE\",\n      \"required\": true,\n      \"options\": [\n        \"Good\",\n        \"Average\",\n        \"Poor\"\n      ]\n    },\n    {\n      \"text\": \"Which meals do you eat here?\",\n      \"type\": \"MULTIPLE_CHOICE\",\n      \"required\": true,\n      \"options\": [\n        \"Breakfast\",\n        \"Lunch\",\n        \"Dinner\"\n      ]\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('title updated', () => pm.expect(pm.response.json().title).to.eql('Canteen Feedback (updated)'));",
+                  "// questions get new ids after an update (no responses yet), so save them again",
+                  "const s = pm.response.json();",
+                  "pm.collectionVariables.set('nameQuestionId', s.questions[0].id);",
+                  "pm.collectionVariables.set('foodQuestionId', s.questions[1].id);",
+                  "pm.collectionVariables.set('goodOptionId', s.questions[1].options[0].id);",
+                  "pm.collectionVariables.set('mealsQuestionId', s.questions[2].id);",
+                  "pm.collectionVariables.set('breakfastOptionId', s.questions[2].options[0].id);",
+                  "pm.collectionVariables.set('lunchOptionId', s.questions[2].options[1].id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create survey - invalid (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/surveys",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "surveys"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"ab\",\n  \"questions\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 400', () => pm.response.to.have.status(400));",
+                  "pm.test('field errors', () => pm.expect(pm.response.json().fieldErrors).to.have.property('title'));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2. Responses",
+      "item": [
+        {
+          "name": "Submit response",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/surveys/{{surveyId}}/responses",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "surveys",
+                "{{surveyId}}",
+                "responses"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"answers\": [\n    { \"questionId\": {{nameQuestionId}}, \"text\": \"Ravi\" },\n    { \"questionId\": {{foodQuestionId}}, \"optionIds\": [{{goodOptionId}}] },\n    { \"questionId\": {{mealsQuestionId}}, \"optionIds\": [{{breakfastOptionId}}, {{lunchOptionId}}] }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 201', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Submit response - missing required answers (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/surveys/{{surveyId}}/responses",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "surveys",
+                "{{surveyId}}",
+                "responses"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"answers\": [\n    { \"questionId\": {{nameQuestionId}}, \"text\": \"Ravi\" }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 400', () => pm.response.to.have.status(400));",
+                  "const e = pm.response.json().fieldErrors;",
+                  "pm.test('food question reported', () => pm.expect(e).to.have.property('answers.' + pm.collectionVariables.get('foodQuestionId')));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List responses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/surveys/{{surveyId}}/responses",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "surveys",
+                "{{surveyId}}",
+                "responses"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('at least one response', () => pm.expect(pm.response.json().length).to.be.above(0));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Response summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/surveys/{{surveyId}}/summary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "surveys",
+                "{{surveyId}}",
+                "summary"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('counts responses', () => pm.expect(pm.response.json().totalResponses).to.be.above(0));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3. Clean up",
+      "item": [
+        {
+          "name": "Delete survey",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/surveys/{{surveyId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "surveys",
+                "{{surveyId}}"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get deleted survey (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/surveys/{{surveyId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "surveys",
+                "{{surveyId}}"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 404', () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
