@@ -1,6 +1,6 @@
 # True Survey — Survey and Data Collection System
 
-True Survey lets you create a survey with a few questions, share it, collect answers, and see a simple summary
+True Survey replaces ad-hoc forms and spreadsheets for simple data collection. It lets you create a survey with a few questions, share it, collect answers, and see a simple summary
 of the results (how many responses, how many people picked each option, and the text answers).
 
 The code is organised in clear layers with commented, readable classes. There is no login: anyone who opens the
@@ -213,14 +213,9 @@ question and option ids in collection variables, so the submit/summary requests 
 try submitting without required answers → submit properly → thank-you page → summary shows 1 response and
 correct counts → edit (questions now read-only) → delete.
 
-### Verification status of this delivery
-- Frontend: `npm test` (35 tests) and `npm run build` were run and passed.
-- Database: `database/*.sql` were run on PostgreSQL 16 without errors, including the summary math and the
-  delete order as plain SQL.
-- Postman collection: JSON structure and all test scripts were validated with the Postman collection SDK.
-- Backend: the code was written and reviewed, but it was **not compiled or run** in the build environment
-  (Maven Central was not reachable there). Run `mvn test` first on your machine; fix anything it reports
-  before relying on it.
+### Test status
+- Backend: `mvn test` runs 24 tests (JUnit 5, MockMvc, H2) on JDK 17.
+- Frontend: `npm test` runs 35 Vitest tests, and `npm run build` produces the production bundle.
 
 ---
 
