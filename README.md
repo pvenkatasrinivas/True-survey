@@ -3,9 +3,8 @@
 True Survey lets you create a survey with a few questions, share it, collect answers, and see a simple summary
 of the results (how many responses, how many people picked each option, and the text answers).
 
-It is a learning project: the code is small, layered and commented so you can read every file and explain it
-in an interview. See **[INTERVIEW_PREPARATION.md](INTERVIEW_PREPARATION.md)**. There is no login — anyone who
-opens the app can create surveys and answer them.
+The code is organised in clear layers with commented, readable classes. There is no login: anyone who opens the
+app can create surveys and answer them.
 
 ---
 
@@ -64,7 +63,6 @@ True-Survey/
 ├── database/             create-database.sql, schema.sql, sample-data.sql
 ├── postman/              True-Survey.postman_collection.json
 ├── API_REFERENCE.md      every endpoint with request/response examples
-├── INTERVIEW_PREPARATION.md
 └── .env.example
 ```
 
